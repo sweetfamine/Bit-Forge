@@ -5,15 +5,15 @@
     <p>Chaos: {{ gamestate.chaos }}</p>
     <p>Cores: {{ gamestate.cores }}</p>
     <button @click="roll">Würfeln</button>
-    <button @click="reboot">Reboot</button>
+    <button @click="manualReboot">Reboot</button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { gamestate } from './store/gamestate'
 import { rollDice } from './core/dice'
-import { calculateBitGain, calculateChaosGain, calculateCoresOnReboot } from './core/formulas';
-import { Balance } from './core/balance';
+import { calculateBitGain, calculateChaosGain} from './core/formulas';
+import { endRun } from './store/runactions';
 
 // Funktion zum Würfeln des ersten Würfels und Hinzufügen des Ergebnisses zu den Bits
 function roll() {
@@ -37,27 +37,9 @@ function roll() {
 }
 
 // Funktion zum Rebooten des Spiels und Berechnen der gewonnenen Cores
-function reboot() {
-  let safeReboot = false;
-
-    if (gamestate.chaos >= Balance.safeRebootChaosThreshold)
-    {
-        safeReboot = true;
-    }
-    else
-    {
-        safeReboot = false;
-    }
-
-    const coreGain = calculateCoresOnReboot(gamestate.bits, gamestate.chaos, safeReboot);
-    gamestate.cores = Number(gamestate.cores) + coreGain;
-
-    // Reset des Spielzustands
-    gamestate.bits = 0;
-    gamestate.runYield = 0;
-    gamestate.dice = [{ sides: 4, count: 1 }];
-    gamestate.chaos = 0;
-    gamestate.maxchaos = 100;
+function manualReboot() {
+  const RunEndReason = 'manualReboot';
+  endRun(RunEndReason);
 }
 </script>
 

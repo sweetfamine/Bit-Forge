@@ -19,3 +19,6 @@ export interface GameState {
     cores: number,                      // meta currency
     prodMultiplier: number,
 }
+
+// Wie ein Run endeden kann
+export type RunEndReason = 'manualReboot' | 'chaosOverflow';

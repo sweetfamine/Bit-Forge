@@ -33,7 +33,8 @@ export function calculateCoresOnReboot(bits: number, chaos: number, manualReboot
 
     let safeRebootBonus: number;
 
-    if (manualReboot === true && chaos < Balance.safeRebootChaosThreshold)
+    checkForSafeReboot();
+    if ( checkForSafeReboot() === true && manualReboot === true)
     {
         safeRebootBonus = Balance.safeRebootBonus
     }
@@ -44,4 +45,20 @@ export function calculateCoresOnReboot(bits: number, chaos: number, manualReboot
 
     const totalCores = Math.floor(cores * (1 + safeRebootBonus))
     return totalCores;
+}
+
+// Prüft ob ein sicherer Reboot möglich ist basierend auf dem aktuellen Chaos-Level
+export function checkForSafeReboot()
+{
+    let safeReboot = false;
+    if (gamestate.chaos >= Balance.safeRebootChaosThreshold)
+    {
+        safeReboot = true;
+    }
+    else
+    {
+        safeReboot = false;
+    }
+
+    return safeReboot;
 }
