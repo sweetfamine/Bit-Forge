@@ -7,7 +7,7 @@ export const gamestate = reactive<GameState>({
     runYield: 0 as number,
     dice: [{ sides: 4, count: 1 } as Die],
     chaos: 0 as number,
-    maxchaos: 1000 as number,
+    maxChaos: 1 as number,
     stability: new Array(12).fill(1) as Bit[],
     upgrades: {},
     cores: 0 as number,

@@ -13,7 +13,7 @@ export interface GameState {
     runYield: number,   // total bits per run
     dice: Die[],
     chaos: number,
-    maxchaos: number,
+    maxChaos: number,
     stability: Bit [],
     upgrades: Record<string, number>,
     cores: number,                      // meta currency

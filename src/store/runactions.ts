@@ -1,20 +1,31 @@
-import { calculateCoresOnReboot, checkForSafeReboot } from "../core/formulas";
+import { calculateCoresOnReboot } from "../core/formulas";
 import type { RunEndReason } from "../core/types";
 import { gamestate } from "./gamestate"
+
+let runIsEnding = false; // Verhindert mehrfaches Beenden eines Runs
 
 // Beendet den aktuellen Run basierend auf dem angegebenen Grund
 export function endRun(reason: RunEndReason)
 {
+    if (runIsEnding === true)
+    {
+    return;
+    }
+
+    runIsEnding = true;
     if (reason === 'manualReboot')
     {
-        calculateCoresOnReboot(gamestate.bits, gamestate.chaos, true);
+        const coreGain = calculateCoresOnReboot(gamestate.bits, gamestate.chaos, true);
+        gamestate.cores = Number(gamestate.cores) + coreGain;
     }
     else if (reason === 'chaosOverflow')
     {
-        calculateCoresOnReboot(gamestate.bits, gamestate.chaos, false);
+        const coreGain = calculateCoresOnReboot(gamestate.bits, gamestate.chaos, false);
+        gamestate.cores = Number(gamestate.cores) + coreGain;
     }
 
     resetrun();
+    runIsEnding = false;
 }
 
 // Setzt den Spielzustand für einen neuen Run zurück

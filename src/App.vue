@@ -30,10 +30,20 @@ function roll() {
     return;
   }
 
+  // Bits
   const bitGain = calculateBitGain(result);
-  const chaosGain = calculateChaosGain(result, die.sides);
   gamestate.bits = Number(gamestate.bits) + bitGain;
+
+  // Chaos
+  const chaosGain = calculateChaosGain(result, die.sides);
   gamestate.chaos = Math.min(gamestate.chaos + chaosGain, 1);
+
+  //check for chaos overflow
+  if (gamestate.chaos >= gamestate.maxChaos)
+  {
+    const RunEndReason = 'chaosOverflow';
+    endRun(RunEndReason);
+  }
 }
 
 // Funktion zum Rebooten des Spiels und Berechnen der gewonnenen Cores
@@ -41,5 +51,6 @@ function manualReboot() {
   const RunEndReason = 'manualReboot';
   endRun(RunEndReason);
 }
+
 </script>
 
