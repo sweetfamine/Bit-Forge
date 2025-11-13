@@ -4,12 +4,19 @@ import { Balance } from "./balance";
 // Berechnet den Bit-Gewinn basierend auf dem Würfelergebnis und dem aktuellen Chaos-Level
 export function calculateBitGain(diceroll: number) {
     const exponent = Balance.gainExponent;
-    const mult = Math.max(0, 1 - Math.pow(gamestate.chaos, exponent));
-    const gain = Math.floor(diceroll * gamestate.prodMultiplier * mult);
+    const mult = Math.max(Balance.minBitProdMultiplier, 1 - Math.pow(gamestate.chaos, exponent));
+    let gain = Math.floor(diceroll * gamestate.prodMultiplier * mult);
+
+    if (gain < 1) // min 1 Bit Gewinn
+    {
+        gain = 1;
+    }
+
     return gain;
 }
 
 // Berechnet wie hoch dein Chaos nach dem Wurf steigt
+// Basierend auf dem Würfelergebnis und der Anzahl der Seiten des Würfels
 export function calculateChaosGain(diceroll: number, sides: number) {
     const base = Balance.gainChaosBase
     const scale = Balance.gainChaosScale
