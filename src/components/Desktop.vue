@@ -30,7 +30,7 @@
           @click="toggleWindow(w.id)"
         >
           <div class="dock-icon-circle">
-            <span v-if="w.type === 'game'">🎮</span>
+            <span v-if="w.type === 'dice forge'">🎮</span>
             <span v-else-if="w.type === 'task'">📊</span>
             <span v-else-if="w.type === 'shop'">🛒</span>
             <span v-else>📦</span>
@@ -64,7 +64,7 @@ import GameWindow from "./windows/GameWindow.vue";
 import TaskManagerWindow from "./windows/TaskManagerWindow.vue";
 import ShopWindow from "./windows/ShopWindow.vue";
 
-type WindowType = "game" | "task" | "shop" | "other";
+type WindowType = "dice forge" | "task" | "shop" | "other";
 
 interface OsWindow {
   id: string;
@@ -82,9 +82,9 @@ let timer: number | undefined;
 
 const windows = ref<OsWindow[]>([
   {
-    id: "game",
-    title: "Game",
-    type: "game",
+    id: "dice forge",
+    title: "Dice Forge",
+    type: "dice forge",
     component: GameWindow,
     x: 120,
     y: 90,
