@@ -32,7 +32,6 @@ export function endRun(reason: RunEndReason)
 export function resetrun() {
     gamestate.bits = 0
     gamestate.runYield = 0
-    gamestate.dice = []
     gamestate.chaos = 0
     gamestate.stability = []
 

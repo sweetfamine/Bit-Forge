@@ -1,15 +1,55 @@
 <template>
   <div class="window-inner">
-    <div
-      class="dice-box"
-      @click="rollDiceNow"
-      :class="{ active: isRolling }"
+    <!-- Großer Button: alle würfeln -->
+    <button
+      class="dice-button"
+      @click="rollAll"
+      :disabled="isRolling"
+      :class="{ rolling: isRolling }"
     >
-      <!-- Vor dem ersten Wurf nur das Icon anzeigen -->
-      <span v-if="currentValue === null" class="dice-text">🎲</span>
+      <div class="dice-face">
+        <template v-if="totalValue === null">
+          <span class="pip pip-1"></span>
+          <span class="pip pip-2"></span>
+          <span class="pip pip-3"></span>
+          <span class="pip pip-4"></span>
+          <span class="pip pip-5"></span>
+          <span class="pip pip-6"></span>
+        </template>
 
-      <!-- Nach dem Wurf die Zahl anzeigen -->
-      <span v-else class="dice-value">{{ currentValue }}</span>
+        <span v-else class="dice-result">
+          {{ totalValue }}
+        </span>
+      </div>
+    </button>
+
+    <!-- Einzelwürfel -->
+    <div class="dice-list">
+      <button
+        v-for="(die, index) in dice"
+        :key="index"
+        class="small-die-button"
+        @click="rollSingle(index)"
+        :disabled="isRolling"
+      >
+        <div class="small-die-face">
+          <span class="small-die-label">
+            {{ die.count }}x d{{ die.sides }}
+          </span>
+          <span
+            v-if="currentValues[index] !== null"
+            class="small-die-result"
+          >
+            {{ currentValues[index] }}
+          </span>
+          <span
+            v-else
+            class="small-die-result small-die-result--placeholder"
+          >
+            —
+          </span>
+        </div>
+      </button>
     </div>
 
     <p>
@@ -19,77 +59,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { roll } from "../../core/formulas";
+import type { Die } from "../../core/types"
+import { useGameWindow } from "./GameWindow"
 
-const isRolling = ref(false);
-const currentValue = ref<number | null>(null);
+const props = defineProps<{
+  dice?: Die[]
+}>()
 
-function rollDiceNow() {
-  if (isRolling.value) return;
-
-  isRolling.value = true;
-  const result = roll();
-
-  if (typeof result === "number") {
-    currentValue.value = result;
-  }
-
-  setTimeout(() => {
-    isRolling.value = false;
-  }, 200);
-}
+const {
+  dice,
+  isRolling,
+  totalValue,
+  currentValues,
+  rollAll,
+  rollSingle
+} = useGameWindow(props)
 </script>
 
-<style scoped>
-.window-inner h3 {
-  margin: 0 0 6px;
-  font-size: 13px;
-}
-
-.window-inner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.window-inner p {
-  font-size: 12px;
-  margin: 0 0 6px;
-}
-
-.dice-box {
-  margin-top: 8px;
-  width: 200px;
-  height: 100px;
-  background: #2e3440;
-  border-radius: 10px;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-  transition: transform 0.15s ease, background 0.2s ease;
-}
-
-.dice-box:hover {
-  background: #3b4252;
-}
-
-.dice-box.active {
-  transform: scale(0.9);
-}
-
-.dice-text {
-  font-size: 50px;
-}
-
-.dice-value {
-  font-size: 48px;
-  font-weight: bold;
-}
-</style>
+<style scoped src="./GameWindow.css"></style>

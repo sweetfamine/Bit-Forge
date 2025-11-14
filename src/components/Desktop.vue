@@ -51,7 +51,9 @@
         @focus="focusWindow(w.id)"
         @update:position="updateWindowPosition(w.id, $event)"
       >
-        <component :is="w.component" />
+        <component :is="w.component"
+        v-bind="w.type === 'dice forge' ? { dice: gamestate.dice } : {}"
+        />
       </WindowFrame>
     </main>
   </div>
@@ -63,6 +65,7 @@ import WindowFrame from "./WindowFrame.vue";
 import GameWindow from "./windows/GameWindow.vue";
 import TaskManagerWindow from "./windows/TaskManagerWindow.vue";
 import ShopWindow from "./windows/ShopWindow.vue";
+import { gamestate } from "../store/gamestate";
 
 type WindowType = "dice forge" | "task" | "shop" | "other";
 

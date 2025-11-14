@@ -2,6 +2,7 @@ import { gamestate } from "../store/gamestate";
 import { Balance } from "./balance";
 import { rollDice } from "./dice";
 import { endRun } from "../store/runactions";
+import type { Die } from "./types";
 
 // Berechnet den Bit-Gewinn basierend auf dem Würfelergebnis und dem aktuellen Chaos-Level
 export function calculateBitGain(diceroll: number) {
@@ -65,34 +66,58 @@ export function checkForSafeReboot()
     return safeReboot;
 }
 
-// Führt einen Würfelwurf durch und aktualisiert den Spielzustand entsprechend
-export function roll() {
-  const die = gamestate.dice[0];
+// einen einzelnen Die würfeln (unter Berücksichtigung von count)
+// gibt die Summe aller Würfe für diesen Die zurück
+export function rollSingleDie(die: Die): number
+{
+  let total = 0
+
+  for (let i = 0; i < die.count; i++)
+  {
+    const result = rollDice(die.sides)
+
+    if (!Number.isFinite(result))
+    {
+      continue
+    }
+
+    total += result
+
+    // Bits
+    const bitGain = calculateBitGain(result)
+    gamestate.bits = Number(gamestate.bits) + bitGain
+
+    // Chaos
+    const chaosGain = calculateChaosGain(result, die.sides)
+    gamestate.chaos = Math.min(gamestate.chaos + chaosGain, 1)
+
+    // check for chaos overflow
+    if (gamestate.chaos >= gamestate.maxChaos)
+    {
+      const RunEndReason = 'chaosOverflow'
+      endRun(RunEndReason)
+      break
+    }
+  }
+
+  return total
+}
+
+// einen Würfel per Index im GameState würfeln
+export function rollDieAtIndex(index: number)
+{
+  const die = gamestate.dice[index]
+
   if (!die)
   {
-    return;
+    return
   }
 
-  const result = rollDice(die.sides);
+  return rollSingleDie(die)
+}
 
-  if (!Number.isFinite(result))
-  {
-    return;
-  }
-
-  // Bits
-  const bitGain = calculateBitGain(result);
-  gamestate.bits = Number(gamestate.bits) + bitGain;
-
-  // Chaos
-  const chaosGain = calculateChaosGain(result, die.sides);
-  gamestate.chaos = Math.min(gamestate.chaos + chaosGain, 1);
-
-  //check for chaos overflow
-  if (gamestate.chaos >= gamestate.maxChaos)
-  {
-    const RunEndReason = 'chaosOverflow';
-    endRun(RunEndReason);
-  }
-  return result;
+// alle Würfel im GameState würfeln
+export function rollAllDice()
+{
+  return gamestate.dice.map((die) => rollSingleDie(die))
 }
