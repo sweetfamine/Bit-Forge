@@ -4,7 +4,7 @@
     <ul>
       <li>Bits – {{ gamestate.bits }}</li>
       <li>Cores – {{ gamestate.cores }}</li>
-      <li>Chaos – {{ gamestate.chaos }}%</li>
+      <li>Chaos – {{ Math.round(gamestate.chaos * 100) }}%</li>
     </ul>
   </div>
 </template>
