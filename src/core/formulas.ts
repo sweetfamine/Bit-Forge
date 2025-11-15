@@ -121,3 +121,9 @@ export function rollAllDice()
 {
   return gamestate.dice.map((die) => rollSingleDie(die))
 }
+
+// Funktion zum Rebooten des Spiels und Berechnen der gewonnenen Cores
+export function manualReboot() {
+  const RunEndReason = 'manualReboot';
+  endRun(RunEndReason);
+}

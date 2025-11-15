@@ -19,10 +19,17 @@
           <Trophy :size="16" />
         </span>
         <span class="user" @click="toggleWindow('restart')">
-          <Power size="16" />
+          <Power :size="16" />
         </span>
       </div>
     </header>
+
+    <!-- Abdunkelung, wenn Restart-Fenster offen ist -->
+    <div
+      v-if="isRestartOpen"
+      class="overlay"
+      @click="toggleWindow('restart')"
+    ></div>
 
     <!-- Hauptbereich -->
     <main class="window-area">
@@ -53,6 +60,7 @@
         :x="w.x"
         :y="w.y"
         :z-index="w.zIndex"
+        :draggable="w.id !== 'restart'"
         @close="closeWindow(w.id)"
         @focus="focusWindow(w.id)"
         @update:position="updateWindowPosition(w.id, $event)"
@@ -162,8 +170,8 @@ const windows = ref<OsWindow[]>([
     title: "Neustart",
     type: "restart",
     component: RestartWindow,
-    x: 400,
-    y: 200,
+    x: 0,
+    y: 0,
     visible: false,
     zIndex: 1,
     inDock: false
@@ -178,6 +186,10 @@ const visibleWindows = computed(() =>
   windows.value
     .filter((w) => w.visible)
     .sort((a, b) => a.zIndex - b.zIndex)
+);
+
+const isRestartOpen = computed(
+  () => windows.value.find((w) => w.id === "restart")?.visible === true
 );
 
 const updateTime = () => {
@@ -206,7 +218,30 @@ const updateWindowPosition = (id: string, pos: { x: number; y: number }) => {
 const toggleWindow = (id: string) => {
   const win = windows.value.find((w) => w.id === id);
   if (!win) return;
+
+  if (id === "restart" && win.visible) {
+    win.visible = false;
+    return;
+  }
+
   win.visible = !win.visible;
+
+  if (win.visible && win.id === "restart") {
+    const frameWidth = 250;
+    const frameHeight = 85;
+
+    win.x = window.innerWidth / 2 - frameWidth / 2;
+    win.y = window.innerHeight / 2 - frameHeight / 2;
+
+    windows.value.forEach((w) => {
+      if (w.id !== "restart") {
+        w.zIndex = 100;
+      }
+    });
+
+    win.zIndex = 1000;
+  }
+
   if (win.visible) {
     focusWindow(id);
   }
@@ -219,6 +254,10 @@ const closeWindow = (id: string) => {
 };
 
 const focusWindow = (id: string) => {
+  if (isRestartOpen.value && id !== "restart") {
+    return;
+  }
+
   const maxZ = Math.max(...windows.value.map((w) => w.zIndex));
   const win = windows.value.find((w) => w.id === id);
   if (!win) return;

@@ -1,6 +1,7 @@
 <template>
   <div
     class="window-frame"
+    :class="{ 'window-frame--restart': props.title === 'Neustart' }"
     :style="{
       left: props.x + 'px',
       top: props.y + 'px',
@@ -15,8 +16,8 @@
       <div class="title-left">
         <span class="window-title">{{ props.title }}</span>
       </div>
+
       <div class="title-right">
-        <!-- Close / Min / Max -->
         <button class="window-btn close" @click.stop="onClose"></button>
       </div>
     </div>
@@ -37,6 +38,7 @@ interface Props {
   x: number;
   y: number;
   zIndex?: number;
+  draggable?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -59,6 +61,7 @@ const onMouseMove = (event: MouseEvent) => {
 
   let newX = event.clientX - offsetX;
   let newY = event.clientY - offsetY;
+
   const minX = -50;
   const minY = 0;
   const maxX = window.innerWidth - 120;
@@ -77,6 +80,7 @@ const stopDrag = () => {
 };
 
 const startDrag = (event: MouseEvent) => {
+  if (props.draggable === false) return;
   dragging = true;
   emit("focus");
 
@@ -107,6 +111,15 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   color: #eceff4;
+}
+
+.window-frame--restart {
+  width: 250px;
+  height: 110px;
+}
+
+.window-frame--restart .window-titlebar {
+  cursor: default;
 }
 
 .window-titlebar {
@@ -148,14 +161,6 @@ onBeforeUnmount(() => {
 
 .window-btn.close {
   background: #bf616a;
-}
-
-.window-btn.min {
-  background: #ebcb8b;
-}
-
-.window-btn.max {
-  background: #a3be8c;
 }
 
 .window-btn:hover {
