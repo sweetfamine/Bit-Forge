@@ -4,7 +4,7 @@
     <header class="top-bar">
       <div class="top-left">
         <span class="logo-dot"></span>
-        <span class="activities">Activities</span>
+        <span class="activities">Bit Forge OS</span>
       </div>
 
       <div class="top-center">
@@ -12,9 +12,9 @@
       </div>
 
       <div class="top-right">
-        <span class="icon">🔊</span>
-        <span class="icon">📡</span>
-        <span class="user">👤</span>
+        <span class="icon"><Settings :size="16"/></span>
+        <span class="icon"><Trophy :size="16"/></span>
+        <span class="user"><Power size="16"/></span>
       </div>
     </header>
 
@@ -30,9 +30,9 @@
           @click="toggleWindow(w.id)"
         >
           <div class="dock-icon-circle">
-            <span v-if="w.type === 'dice forge'">🎮</span>
-            <span v-else-if="w.type === 'task'">📊</span>
-            <span v-else-if="w.type === 'shop'">🛒</span>
+            <span v-if="w.type === 'dice forge'"><Gamepad2 :size="29" /></span>
+            <span v-else-if="w.type === 'task'"><ChartSpline :size="24" /></span>
+            <span v-else-if="w.type === 'shop'"><ShoppingBasket :size="29" /></span>
             <span v-else>📦</span>
           </div>
           <span class="dock-label">{{ w.title }}</span>
