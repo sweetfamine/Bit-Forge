@@ -1,7 +1,7 @@
 <template>
   <div
     class="window-frame"
-    :class="{ 'window-frame--restart': props.title === 'Neustart' }"
+    :class="{ 'window-frame--restart': props.title === 'Bit Forge OS' }"
     :style="{
       left: props.x + 'px',
       top: props.y + 'px',

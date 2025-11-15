@@ -167,7 +167,7 @@ const windows = ref<OsWindow[]>([
   },
   {
     id: "restart",
-    title: "Neustart",
+    title: "Bit Forge OS",
     type: "restart",
     component: RestartWindow,
     x: 0,
