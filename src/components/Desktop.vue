@@ -12,9 +12,15 @@
       </div>
 
       <div class="top-right">
-        <span class="icon"><Settings :size="16"/></span>
-        <span class="icon"><Trophy :size="16"/></span>
-        <span class="user"><Power size="16"/></span>
+        <span class="icon" @click="toggleWindow('options')">
+          <Settings :size="16" />
+        </span>
+        <span class="icon" @click="toggleWindow('achievements')">
+          <Trophy :size="16" />
+        </span>
+        <span class="user" @click="toggleWindow('restart')">
+          <Power size="16" />
+        </span>
       </div>
     </header>
 
@@ -23,7 +29,7 @@
       <!-- Dock -->
       <nav class="dock">
         <button
-          v-for="w in windows"
+          v-for="w in dockWindows"
           :key="w.id"
           class="dock-icon"
           :class="{ active: w.visible }"
@@ -51,8 +57,9 @@
         @focus="focusWindow(w.id)"
         @update:position="updateWindowPosition(w.id, $event)"
       >
-        <component :is="w.component"
-        v-bind="w.type === 'dice forge' ? { dice: gamestate.dice } : {}"
+        <component
+          :is="w.component"
+          v-bind="w.type === 'dice forge' ? { dice: gamestate.dice } : {}"
         />
       </WindowFrame>
     </main>
@@ -61,13 +68,23 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, type Component } from "vue";
+import { gamestate } from "../store/gamestate";
 import WindowFrame from "./WindowFrame.vue";
 import GameWindow from "./windows/GameWindow.vue";
 import TaskManagerWindow from "./windows/TaskManagerWindow.vue";
 import ShopWindow from "./windows/ShopWindow.vue";
-import { gamestate } from "../store/gamestate";
+import OptionsWindow from "./windows/OptionsWindow.vue";
+import AchievementsWindow from "./windows/AchievementsWindow.vue";
+import RestartWindow from "./windows/RestartWindow.vue";
 
-type WindowType = "dice forge" | "task" | "shop" | "other";
+type WindowType =
+  | "dice forge"
+  | "task"
+  | "shop"
+  | "options"
+  | "achievements"
+  | "restart"
+  | "other";
 
 interface OsWindow {
   id: string;
@@ -78,6 +95,7 @@ interface OsWindow {
   y: number;
   visible: boolean;
   zIndex: number;
+  inDock: boolean;
 }
 
 const timeString = ref("");
@@ -91,8 +109,9 @@ const windows = ref<OsWindow[]>([
     component: GameWindow,
     x: 120,
     y: 90,
-    visible: true,
-    zIndex: 1
+    visible: false,
+    zIndex: 1,
+    inDock: true
   },
   {
     id: "task",
@@ -102,7 +121,8 @@ const windows = ref<OsWindow[]>([
     x: 480,
     y: 120,
     visible: false,
-    zIndex: 1
+    zIndex: 1,
+    inDock: true
   },
   {
     id: "shop",
@@ -112,9 +132,47 @@ const windows = ref<OsWindow[]>([
     x: 280,
     y: 220,
     visible: false,
-    zIndex: 1
+    zIndex: 1,
+    inDock: true
+  },
+  {
+    id: "options",
+    title: "Optionen",
+    type: "options",
+    component: OptionsWindow,
+    x: 420,
+    y: 160,
+    visible: false,
+    zIndex: 1,
+    inDock: false
+  },
+  {
+    id: "achievements",
+    title: "Achievements",
+    type: "achievements",
+    component: AchievementsWindow,
+    x: 360,
+    y: 140,
+    visible: false,
+    zIndex: 1,
+    inDock: false
+  },
+  {
+    id: "restart",
+    title: "Neustart",
+    type: "restart",
+    component: RestartWindow,
+    x: 400,
+    y: 200,
+    visible: false,
+    zIndex: 1,
+    inDock: false
   }
 ]);
+
+const dockWindows = computed(() =>
+  windows.value.filter((w) => w.inDock)
+);
 
 const visibleWindows = computed(() =>
   windows.value
@@ -168,117 +226,4 @@ const focusWindow = (id: string) => {
 };
 </script>
 
-<style scoped>
-.desktop {
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle at top left, #6372e0 0%, #3d457a 45%, #393f63 100%);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  color: #e5e9f0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.top-bar {
-  height: 32px;
-  background: rgba(15, 18, 30, 0.92);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  font-size: 13px;
-}
-
-.top-left,
-.top-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.top-center {
-  flex: 1;
-  text-align: center;
-  font-weight: 500;
-}
-
-.logo-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: #5e81ac;
-}
-
-.activities {
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.activities:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.top-right .icon,
-.top-right .user {
-  padding: 2px 4px;
-  border-radius: 6px;
-}
-
-.top-right .icon:hover,
-.top-right .user:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.window-area {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  padding: 12px 16px;
-}
-
-.dock {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dock-icon {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: #e5e9f0;
-  font-size: 11px;
-}
-
-.dock-icon-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: rgba(10, 14, 30, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-.dock-icon.active .dock-icon-circle {
-  outline: 2px solid #88c0d0;
-}
-
-.dock-label {
-  max-width: 60px;
-  text-align: center;
-}
-</style>
+<style scoped src="./Desktop.css"></style>
