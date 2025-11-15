@@ -5,7 +5,14 @@ import type { GameState, Bit, Die } from "../core/types";
 export const gamestate = reactive<GameState>({
     bits: 0 as number,
     runYield: 0 as number,
-    dice: [{ sides: 4, count: 1 } as Die],
+    dice: [
+        { sides: 4, count: 1 } as Die,
+        { sides: 4, count: 1 } as Die,
+        { sides: 4, count: 1 } as Die,
+        { sides: 4, count: 1 } as Die,
+        { sides: 4, count: 1 } as Die,
+        { sides: 8, count: 2 } as Die
+    ],
     chaos: 0 as number,
     maxChaos: 1 as number,
     stability: new Array(12).fill(1) as Bit[],

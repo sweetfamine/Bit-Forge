@@ -1,0 +1,211 @@
+.window-inner h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.window-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.window-inner p {
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+
+.dice-info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.dice-info-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  color: #d8dee9;
+  opacity: 0.75;
+}
+
+.dice-info-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  color: #eceff4;
+}
+
+.dice-button {
+  margin-top: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  outline: none;
+}
+
+.dice-button:disabled {
+  cursor: default;
+}
+
+.dice-face {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #2e3440;
+  border: 2px solid #4c566a;
+
+  position: relative;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.12s ease,
+    background 0.12s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-button:hover:not(:disabled) .dice-face {
+  background: #3b4252;
+  border-color: #81a1c1;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.dice-button:active .dice-face {
+  transform: translateY(1px) scale(0.97);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.dice-button.rolling .dice-face {
+  transform: rotate(18deg) scale(0.97);
+}
+
+.pip {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #eceff4;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.pip-1 {
+  top: 18%;
+  left: 22%;
+}
+
+.pip-2 {
+  top: 18%;
+  right: 22%;
+}
+
+.pip-3 {
+  bottom: 18%;
+  left: 22%;
+}
+
+.pip-4 {
+  bottom: 18%;
+  right: 22%;
+}
+
+.pip-5 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pip-6 {
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dice-result {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  color: #eceff4;
+  text-shadow: 0 0 6px rgba(163, 190, 140, 0.8);
+}
+
+.dice-button-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #d8dee9;
+  opacity: 0.8;
+}
+
+.dice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.small-die-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.small-die-button:disabled {
+  cursor: default;
+}
+
+.small-die-face {
+  min-width: 90px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #2e3440;
+  border: 1px solid #4c566a;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.small-die-button:hover:not(:disabled) .small-die-face {
+  background: #3b4252;
+  border-color: #81a1c1;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6);
+}
+
+.small-die-label {
+  color: #d8dee9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+}
+
+.small-die-result {
+  color: #eceff4;
+  font-weight: 600;
+}
+
+.small-die-result--placeholder {
+  opacity: 0.4;
+}
