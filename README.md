@@ -1,5 +1,5 @@
 # Bit-Forge [ENG]
-A small and simple **roguelite incremental game**.  
+A small and simple **roguelight incremental game**.  
 At its core lies the conflict: **Bits vs. Chaos** – **Stability vs. Instability**.
 
 How many bits can you generate before chaos takes over?  
@@ -19,7 +19,7 @@ Install the required packages:
 ---
 
 # Bit-Forge [GER]
-Ein kleines, simples **roguelite incremental game**.  
+Ein kleines, simples **roguelight incremental game**.  
 Im Zentrum steht der Konflikt: **Bits vs. Chaos** – **Stabilität vs. Instabilität**.
 
 Wie viele Bits kannst du erzeugen, bevor das Chaos die Kontrolle übernimmt?  
